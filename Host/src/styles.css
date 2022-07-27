@@ -2696,3 +2696,18 @@ body.e-dark .e-calendar .e-content td.e-today span.e-day {
   color: #303343;
   margin-top: 25px;
 }
+
+.profile-diet-card-container {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  padding-top: 20px;
+}
+
+@media only screen and (max-width: 1200px) {
+  .e-custom-card {
+    height: 100%;
+    margin-bottom: 0 !important;
+  }
+}

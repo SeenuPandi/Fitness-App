@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { ButtonComponent } from '@syncfusion/ej2-react-buttons';
-import { TabComponent, TabItemsDirective, TabItemDirective } from '@syncfusion/ej2-react-navigations';
 import "./index.css";
 import Tab from "./tab";
 

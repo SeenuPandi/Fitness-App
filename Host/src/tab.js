@@ -35,18 +35,7 @@ function Tab() {
     }
     function contentActivities() {
         return (
-            <div >
-                <div class="col-md-9">
-                    <Activities></Activities>
-                </div>
-                <div class="col-md-3">
-                    <div id="activity-profile-panel-id" class="e-panel e-activity-profile-panel">
-                        <div class="e-panel-container">
-                            <Profile></Profile>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Activities></Activities>
         )
     }
     return (
