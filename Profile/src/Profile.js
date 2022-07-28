@@ -18,9 +18,9 @@ function Profile(props) {
                         <div className="e-card-header-title">{activity.activity}</div>
                         <div>
                             <div className="e-card-header-sub-title" style={{ float: "left" }}>
-                                {activity.amount ? (activity.amount + ' |') : ''}
-                                {activity.duration ? (activity.duration + ' |') : ''}
-                                {activity.distance ? (activity.distance + ' |') : ''}
+                                {activity.amount ? (activity.amount + ' | ') : ''}
+                                {activity.duration ? (activity.duration + ' | ') : ''}
+                                {activity.distance ? (activity.distance + ' | ') : ''}
                                 { distance && <span className="e-activity-highlight">{activity.percentage}</span>}
                                 { !distance && <span className="e-meals-highlight">{activity.percentage}</span>}
                             </div>
@@ -87,7 +87,7 @@ function Profile(props) {
                     <div>
                         <div className="e-journal" style={{ float: "left" }}>Journals</div>
                         <div className="e-journal-date" style={{ float: "right" }}>
-                            <DatePickerComponent value={currentDate} maxDate={maxDate} width="100%"></DatePickerComponent>
+                            <DatePickerComponent value={currentDate} maxDate={maxDate} width="100%" change={props.onDateChange}></DatePickerComponent>
                         </div>
                     </div>
                     <div className="profile-diet-card-container">{activities.map(getFullDetails)}</div>

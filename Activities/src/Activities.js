@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Browser } from '@syncfusion/ej2-base';
 import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
@@ -20,7 +20,8 @@ function Activities() {
     var maxDate = new Date();
     var cellSpacing = [10, 20];
     var steps = 1240;
-    var heartRate = 80;
+    var [heartRate,setName] = useState('');
+    //var heartRate = 80;
     var calories = 1205;
     var expectedCalories = 3000;
     var sleepInMinutes = 350;
@@ -484,7 +485,7 @@ function Activities() {
                 let lunchWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
                 let eveningWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
                 steps = morningWalk + eveningWalk;
-                heartRate = Math.round(Math.random() * (100 - 70) + 70);
+                setName(Math.round(Math.random() * (100 - 70) + 70));
                 sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
                 sleepInHours = getSleepInHours(sleepInMinutes);
                 consumedWaterCount = breakfastWaterTaken + lunchWaterTaken + eveningWaterTaken;
@@ -675,10 +676,15 @@ function Activities() {
         args.text.splice(2, 2);
     }
 
+    function onProfileDateChange(args){
+        currentDate = args.value;
+        updateComponents();
+    }
+
     const image= {
         avatarUrl: './assets/Profile/Heart-1.svg'
     };
-
+   
     return (
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
             <div className="col-md-9 e-dashboard-content">
@@ -702,8 +708,8 @@ function Activities() {
                                         </div>
                                     </div>
                                     <div className="e-card-content">
-                                        <div className="e-bpm-value">{heartRate} <span>bpm</span></div>
-                                        <div className="e-progress-annotation"><img src='http://placekitten.com/g/64/64'></img></div>
+                                        <div className="e-bpm-value">{heartRate}<span>bpm</span></div>
+                                        <div className="e-progress-annotation"></div>
                                     </div>
                                 </div>
                                 <div tabIndex={0} className="e-card e-steps-card">
@@ -828,7 +834,7 @@ function Activities() {
                                         <ColumnDirective field='Workout' headerText='Workout' textAlign='Left' width="200" />
                                         <ColumnDirective field='Distance' headerText='Distance (kms)' textAlign='Left' width="200" format="###.# km" />
                                         <ColumnDirective field='Duration' headerText='Duration (minutes)' textAlign='Left' width="200" format='### mins' />
-                                        <ColumnDirective field='Date' headerText='DateTime' textAlign='Left' width="200" format="MMM dd,yyyy hh:mm a" />
+                                        <ColumnDirective field='Date' headerText='Date & Time' textAlign='Left' width="200" format="MMM dd,yyyy hh:mm a" />
                                         <ColumnDirective field='Completion' headerText='Completion' textAlign='Left' width="200" format="###'%'" />
                                     </ColumnsDirective>
                                 </GridComponent>
@@ -839,7 +845,7 @@ function Activities() {
             </div>
             <div className="col-md-3">
                 <React.Suspense fallback="Loading">
-                    <Profile currentDate={currentDate} activities = {todayActivities} profileStats = {profileStats}></Profile>
+                    <Profile currentDate={currentDate} activities = {todayActivities} profileStats = {profileStats} onDateChange={onDateChange}></Profile>
                 </React.Suspense>
             </div>
         </div>

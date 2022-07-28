@@ -835,6 +835,7 @@ body {
 }
 
 .e-progress-annotation {
+  background-image: url(./assets/Profile/Heart-1.svg);
   width: auto;
   height: inherit;
   align-self: center;
