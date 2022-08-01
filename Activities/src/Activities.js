@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Browser } from '@syncfusion/ej2-base';
 import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
@@ -9,91 +9,21 @@ const Profile = React.lazy(() =>
     import('Profile/Profile')
 )
 
-function Activities() {
+var masterData = [];
+var initialUpdate = true;
 
-    var title = 'fitness-app';
-    var isDevice = Browser.isDevice;
-    var isSmallDevice = false;
-    var innerWidth = window.innerWidth;
+function Activities() {
+    var sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
     var today = new Date();
     var currentDate = today;
     var maxDate = new Date();
-    var cellSpacing = [10, 20];
-    var steps = 1240;
-    var [heartRate,setName] = useState('');
-    //var heartRate = 80;
-    var calories = 1205;
-    var expectedCalories = 3000;
-    var sleepInMinutes = 350;
-    var sleepInHours = getSleepInHours(sleepInMinutes);
-    var todaysWorkoutPercent = 80;
-    var isBreakFastMenuAdded = false;
-    var isSnack1MenuAdded = false;
-    var isLunchMenuAdded = false;
-    var isSnack2MenuAdded = false;
-    var isDinnerMenuAdded = false;
-    var breakFastRecom = 440;
-    var snack1Recom = 165;
-    var lunchRecom = 440;
-    var snack2Recom = 165;
-    var dinnerRecom = 440;
-    var currentBreakFastMenu = [];
-    var currentBreakFastCalories = 0;
-    var currentLunchMenu = [];
-    var currentBreakFastMenuText;
-    var currentLunchMenuText;
-    var currentSnack1MenuText;
-    var currentSnack2MenuText;
-    var currentDinnerMenuText;
-    var currentLunchCalories = 0;
-    var currentDinnerMenu = [];
-    var currentDinnerCalories = 0;
-    var currentSnack1Menu = [];
-    var currentSnack1Calories = 0;
-    var currentSnack2Menu = [];
-    var currentSnack2Calories = 0;
-    var consumedCalories = 0;
+    let dropDownInstance;
+    let chartInstance;
+    let gridInstance;
     var burnedCalories = 0;
-    var fastStartTime;
-    var fastEndTime;
-    var consumedWaterCount = 4;
-    var consumedWaterAmount = 600;
-    var expectedWaterAmount = 2400;
-    var currentMenuHeader;
-    var currentMenu;
-    var currentTotalCal = 0;
-    var currentTotalProteins = 0;
-    var currentTotalFat = 0;
-    var currentTotalCarbs = 0;
-    var currentTotalCalcium = 0;
-    var currentTotalIron = 0;
-    var currentTotalSodium = 0;
-    var currentRecom = 0;
-    var currentQuantity = 1;
-    var modifyHeaderTitle = "Change Your Weight";
-    var modifyBtnGroup = ['KG', 'LB'];
-    var currentWtUnit = 'KG';
-    var currentHtUnit = 'CM';
-    var currentAddedMenu;
-    var isGoalEdit = false;
-    var changeTimeBtnText = "CHANGE TIME";
-    var currrentTheme = 'Light';
+    var todaysWorkoutPercent = 80;
     var theme = 'Tailwind';
-    var chartBackGround = '#FFFFFF';
-    var weightSliderMin = 0;
-    var weightSliderMax = 120;
-    var heightSliderMin = 0;
-    var heightSliderMax = 200;
-    var lastSelectItem = '';
-    var dateEnable = false;
-    var isToday = true;
-    var weightSliderLimit = { enabled: true, minStart: currentWtUnit === 'KG' ? 10 : 20 };
-    var heightSliderLimit = { enabled: true, minStart: currentHtUnit === 'CM' ? 30 : 1 };
-    var humanImg = 'LightHuman';
-    var activityChartMonthData = {};
-    var activityChartWeekData = {};
-    var masterData = [];
-    let circulargauge;
+    var profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
     var breakfastMenu = [
         { item: 'Banana', cal: 105, fat: 0.4, carbs: 27, proteins: 1.3, sodium: 0.0012, iron: 0.00031, calcium: 0.005 },
         { item: 'Bread', cal: 77, fat: 1, carbs: 14, proteins: 2.6, sodium: 0.142, iron: 0.0036, calcium: 0.260 },
@@ -123,45 +53,70 @@ function Activities() {
         { item: 'Curd Rice', cal: 207, fat: 3.2, carbs: 38, proteins: 6.1, sodium: 0.167, iron: 0.0006, calcium: 0.272 },
         { item: 'Chicken Curry', cal: 243, fat: 11, carbs: 7.5, proteins: 28, sodium: 0.073, iron: 0.0008, calcium: 0.023 }
     ];
-    var todayActivities = [];
-    var profileStats = { name: 'John Watson', age: 24, location: 'India', weight: 70, height: 165, goal: 65, email: 'john.watson@gmail.com', weightMes: 'kg', goalMes: 'kg', heightMes: 'cm' };
-    let dropDownInstance;
-    let chartInstance;
-    let gridInstance;
-    let weightChartInstance;
-    let gridData = getData();
-    let chartDietData = getChartData('Diet');
-    let chartData = getChartData('Workout');
-    let weightChartData = getWeightChartData();
-    let countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-    let countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-    let diff = 16;
-    let minimumDate = new Date(new Date().setHours(0, 0, 0));
-    let maximumDate = new Date(new Date(new Date().setDate(minimumDate.getDate() + 1)).setHours(24, 0, 0));
-    //let x = setInterval(intervalFn.bind(this), 1000);
+    var consumedWaterCount = 4;
+    var consumedWaterAmount = 600;
+    var currentDinnerMenu = [];
+    var currentDinnerCalories = 0;
+    var currentSnack2Menu = [];
+    var currentSnack2Calories = 0;
+    var isBreakFastMenuAdded = false;
+    var isSnack1MenuAdded = false;
+    var isLunchMenuAdded = false;
+    var isSnack2MenuAdded = false;
+    var isDinnerMenuAdded = false;
+    var currentBreakFastMenuText;
+    var currentLunchMenuText;
+    var currentSnack1MenuText;
+    var currentSnack2MenuText;
+    var currentDinnerMenuText;
+    var currentBreakFastMenuText;
+    var currentBreakFastMenu = [];
+    var currentBreakFastCalories = 0;
+    currentBreakFastMenu = breakfastMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
+    var isBreakFastMenuAdded = true;
+    var currentSnack1Menu = [];
+    var currentSnack1Calories = 0;
+    currentSnack1Menu = snackMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
+    var isSnack1MenuAdded = true;
+    var currentLunchMenu = [];
+    var currentLunchCalories = 0;
+    currentLunchMenu = lunchMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
+    var isLunchMenuAdded = true;
+    var currentTotalProteins = 0;
+    var currentTotalFat = 0;
+    var currentTotalCarbs = 0;
+    var currentTotalCalcium = 0;
+    var currentTotalIron = 0;
+    var currentTotalSodium = 0;
+    var consumedCalories = 0;
+    var [state, setState] = useState({
+        heartRate: Math.round(Math.random() * (100 - 70) + 70),
+        steps: Math.round(Math.random() * (3000 - 1000) + 1000),
+        consumedCalories:Math.round(Math.random() * (3000 - 1000) + 1000),
+        sleepInMinutes: sleepInMinutes,
+        sleepInHours: getSleepInHours(sleepInMinutes),
+        gridData: getData(),
+        chartDietData: getChartData('Diet'),
+        chartData: getChartData('Workout'),
+        morningWalk: Math.round(Math.random() * (3000 - 1000) + 1000),
+        eveningWalk : Math.round(Math.random() * (3000 - 1000) + 1000),
+        breakfastWaterTaken: Math.round(Math.random() * (5 - 2) + 2),
+        expectedWaterAmount: 2400,
+        expectedCalories : 3000,
+        todayActivities : [],
+        datePickerDate: currentDate
+    });
+    var isToday = true;
+    useEffect(()=>{
+        updateConsumedCalories();
+        getInitialData();
+    },[]);
+    
     innerWidth = window.innerWidth;
     if (innerWidth <= 820) {
         isSmallDevice = true;
     }
-    currentBreakFastMenu = [];
-    currentBreakFastCalories = 0;
-    currentBreakFastMenu = breakfastMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
-    isBreakFastMenuAdded = true;
-    currentSnack1Menu = [];
-    currentSnack1Calories = 0;
-    currentSnack1Menu = snackMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
-    isSnack1MenuAdded = true;
-    currentLunchMenu = [];
-    currentLunchCalories = 0;
-    currentLunchMenu = lunchMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
-    isLunchMenuAdded = true;
-    updateConsumedCalories();
-    let pieData = getPieChartData();
-    todayActivities = getInitialData();
-    updateWaterGauge();
-
-
-
+    
     let datePickerWidth = '100%';
     let chartArea = {
         border: {
@@ -210,9 +165,6 @@ function Activities() {
     let crosshair = { enable: true, lineType: 'Vertical', dashArray: "10,5", line: { color: '#EE4769' } };
     let marker = { visible: true, height: 10, width: 10 };
     let dropDownData = ['Weekly', 'Monthly'];
-
-
-
     function getChartData(action) {
         let count = (dropDownInstance && dropDownInstance.value === 'Monthly') ? 30 : 7;
         let sampleData = [];
@@ -237,18 +189,16 @@ function Activities() {
     }
 
     function onDateChange(args) {
-        currentDate = args.value;
-        updateComponents();
+        if(initialUpdate){
+            initialUpdate = false;
+            currentDate = args.value;
+            updateComponents();
+            initialUpdate = true;
+        }
+       
     }
 
     function updateConsumedCalories() {
-        currentTotalProteins = 0;
-        currentTotalFat = 0;
-        currentTotalCarbs = 0;
-        currentTotalCalcium = 0;
-        currentTotalIron = 0;
-        currentTotalSodium = 0;
-        consumedCalories = 0;
         if (isBreakFastMenuAdded) {
             currentBreakFastMenuText = currentBreakFastMenu.map(function (elem) {
                 return elem.item;
@@ -317,40 +267,40 @@ function Activities() {
     }
 
 
-    function getPieChartData() {
-        return [{ x: 'PROTEINS', y: currentTotalProteins, fill: '#4DD291' }, { x: 'FAT', y: currentTotalFat, fill: '#FC892C' },
-        { x: 'CARBOHYDRATES', y: currentTotalCarbs, fill: '#FFC147' }, { x: 'CALCIUM', y: currentTotalCalcium, fill: '#E25641' },
-        { x: 'SODIUM', y: currentTotalSodium, fill: '#901C53' }, { x: 'IRON', y: currentTotalIron, fill: '#CB4967' }];
-    }
+    // function getPieChartData() {
+    //     return [{ x: 'PROTEINS', y: currentTotalProteins, fill: '#4DD291' }, { x: 'FAT', y: currentTotalFat, fill: '#FC892C' },
+    //     { x: 'CARBOHYDRATES', y: currentTotalCarbs, fill: '#FFC147' }, { x: 'CALCIUM', y: currentTotalCalcium, fill: '#E25641' },
+    //     { x: 'SODIUM', y: currentTotalSodium, fill: '#901C53' }, { x: 'IRON', y: currentTotalIron, fill: '#CB4967' }];
+    // }
 
 
 
     function getInitialData() {
         let data;
         if (masterData.length === 0) {
-            let morningWalk = Math.round(Math.random() * (3000 - 1000) + 1000);
             let breakfastWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
             let lunchWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
-            steps = morningWalk;
             consumedWaterCount = breakfastWaterTaken + lunchWaterTaken;
             consumedWaterAmount = consumedWaterCount * 150;
-            heartRate = Math.round(Math.random() * (100 - 70) + 70);
-            sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
             data = {
                 date: currentDate.toLocaleDateString(),
                 activity: {
-                    steps: steps,
-                    heartRate: heartRate,
-                    calories: consumedCalories,
-                    sleep: sleepInMinutes,
-                    gridData: JSON.parse(JSON.stringify(gridData)),
-                    charDietData: JSON.parse(JSON.stringify(chartDietData)),
-                    chartWorkoutData: JSON.parse(JSON.stringify(chartData)),
-                    activityChartMonthData: JSON.parse(JSON.stringify(activityChartMonthData)),
-                    activityChartWeekData: JSON.parse(JSON.stringify(activityChartWeekData)),
-                    morningWalk: morningWalk
+                    heartRate: state.heartRate,
+                    steps: state.steps,
+                    calories: state.consumedCalories,
+                    sleepInMinutes: state.sleepInMinutes,
+                    sleepInHours: getSleepInHours(sleepInMinutes),
+                    gridData: JSON.parse(JSON.stringify(state.gridData)),
+                    charDietData: JSON.parse(JSON.stringify(state.chartDietData)),
+                    chartWorkoutData: JSON.parse(JSON.stringify(state.chartData)),
+                    // activityChartMonthData: JSON.parse(JSON.stringify(activityChartMonthData)),
+                    // activityChartWeekData: JSON.parse(JSON.stringify(activityChartWeekData)),
+                    morningWalk: state.morningWalk,
+                    eveningWalk: state.eveningWalk
                 },
                 diet: {
+                    expectedCalories : state.expectedCalories,
+                    expectedWaterAmount : state.expectedWaterAmount,
                     breakFastMenu: JSON.parse(JSON.stringify(currentBreakFastMenu)),
                     breakFastCalories: currentBreakFastCalories,
                     breakFastText: currentBreakFastMenuText,
@@ -363,9 +313,10 @@ function Activities() {
                     lunchCalories: currentLunchCalories,
                     lunchText: currentLunchMenuText,
                     isLunchAdded: isLunchMenuAdded,
-                    consumedCalories: consumedCalories,
+                    consumedCalories: state.consumedCalories,
                     burnedCalories: burnedCalories,
-                    breakfastWaterTaken: breakfastWaterTaken,
+                    breakfastWaterTaken: state.breakfastWaterTaken,
+                    expectedWaterAmount: state.expectedWaterAmount,
                     lunchWaterTaken: lunchWaterTaken,
                     proteins: currentTotalProteins,
                     fat: currentTotalFat,
@@ -375,26 +326,13 @@ function Activities() {
                     iron: currentTotalIron,
                 },
                 fasting: {
-                    chartWeightData: weightChartData,
                     consumedWaterCount: consumedWaterCount
                 }
             };
             masterData.push(data);
         } else {
-            data = masterData[0];
-            steps = data.activity.steps;
-            consumedWaterCount = data.fasting.consumedWaterCount;
-            consumedWaterAmount = consumedWaterCount * 150;
-            heartRate = data.activity.heartRate;
-            sleepInMinutes = data.activity.sleep;
-            sleepInHours = getSleepInHours(sleepInMinutes);
-            consumedCalories = data.diet.consumedCalories;
+            data = masterData[0];  
             burnedCalories = data.diet.burnedCalories;
-            gridData = data.activity.gridData;
-            chartDietData = data.activity.charDietData;
-            chartData = data.activity.chartWorkoutData;
-            activityChartMonthData = data.activity.activityChartMonthData;
-            activityChartWeekData = data.activity.activityChartWeekData;
             currentBreakFastMenu = data.diet.breakFastMenu;
             currentBreakFastCalories = data.diet.breakFastCalories;
             currentBreakFastMenuText = data.diet.breakFastText;
@@ -407,7 +345,6 @@ function Activities() {
             currentLunchCalories = data.diet.lunchCalories;
             currentLunchMenuText = data.diet.lunchText;
             isLunchMenuAdded = data.diet.isLunchAdded;
-            weightChartData = data.fasting.chartWeightData;
             currentTotalProteins = data.diet.proteins;
             currentTotalFat = data.diet.fat;
             currentTotalCarbs = data.diet.carbs;
@@ -415,20 +352,40 @@ function Activities() {
             currentTotalSodium = data.diet.sodium;
             currentTotalIron = data.diet.iron;
         }
+
         let activities = [
             { name: 'Morning Walk', activity: 'Morning Walk', duration: '30m', distance: (data.activity.morningWalk / 1312).toFixed(2).replace(/[.,]00$/, "") + 'km', percentage: ((data.activity.morningWalk / 6000) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:00 AM' },
-            { name: 'Breakfast Water', activity: 'Water Taken', count: data.diet.breakfastWaterTaken, amount: data.diet.breakfastWaterTaken + ' Glasses', percentage: (((data.diet.breakfastWaterTaken * 150) / expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:40 AM' },
-            { name: 'Breakfast', activity: 'Breakfast', amount: data.diet.breakFastText, percentage: ((data.diet.breakFastCalories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '9:00 AM' },
-            { name: 'Snack1', activity: 'Snack', amount: data.diet.snack1Text, percentage: ((data.diet.snack1Calories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '11:00 AM' },
-            { name: 'Lunch Water', activity: 'Water Taken', count: data.diet.lunchWaterTaken, amount: data.diet.lunchWaterTaken + ' Glasses', percentage: (((data.diet.lunchWaterTaken * 150) / expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '12:00 PM' },
-            { name: 'Lunch', activity: 'Lunch', amount: data.diet.lunchText, percentage: ((data.diet.lunchCalories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '1:00 PM' },
+            { name: 'Breakfast Water', activity: 'Water Taken', count: data.diet.breakfastWaterTaken, amount: data.diet.breakfastWaterTaken + ' Glasses', percentage: (((data.diet.breakfastWaterTaken * 150) / data.diet.expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:40 AM' },
+            { name: 'Breakfast', activity: 'Breakfast', amount: data.diet.breakFastText, percentage: ((data.diet.breakFastCalories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '9:00 AM' },
+            { name: 'Snack1', activity: 'Snack', amount: data.diet.snack1Text, percentage: ((data.diet.snack1Calories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '11:00 AM' },
+            { name: 'Lunch Water', activity: 'Water Taken', count: data.diet.lunchWaterTaken, amount: data.diet.lunchWaterTaken + ' Glasses', percentage: (((data.diet.lunchWaterTaken * 150) / data.diet.expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '12:00 PM' },
+            { name: 'Lunch', activity: 'Lunch', amount: data.diet.lunchText, percentage: ((data.diet.lunchCalories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '1:00 PM' },
         ];
-        return activities;
+        setState( () => {
+            return {
+                heartRate : data.activity.heartRate,
+                steps : data.activity.steps,
+                sleepInMinutes : data.activity.sleep,
+                sleepInHours : getSleepInHours(data.activity.sleepInMinutes),
+                gridData: data.activity.gridData,
+                chartDietData: data.activity.charDietData,
+                chartData: data.activity.chartWorkoutData,
+                consumedCalories: data.diet.consumedCalories,
+                morningWalk: data.activity.morningWalk,
+                eveningWalk: data.activity.eveningWalk,
+                breakfastWaterTaken:data.diet.breakfastWaterTaken,
+                expectedWaterAmount : data.diet.expectedWaterAmount,
+                currentBreakFastCalories: data.diet.breakFastCalories,
+                expectedCalories : data.diet.expectedCalories,
+                todayActivities : activities,
+                datePickerDate : currentDate
+            }
+        })
     }
 
-    function updateWaterGauge() {
+    // function updateWaterGauge() {
 
-    }
+    // }
 
     function updateComponents() {
         isToday = currentDate.getDate() === new Date().getDate() && currentDate.getMonth() === new Date().getMonth() && currentDate.getFullYear() === new Date().getFullYear();
@@ -445,19 +402,8 @@ function Activities() {
             }
             if (isExist) {
                 data = masterData[index];
-                steps = data.activity.steps;
-                consumedWaterCount = data.fasting.consumedWaterCount;
-                consumedWaterAmount = consumedWaterCount * 150;
-                heartRate = data.activity.heartRate;
-                sleepInMinutes = data.activity.sleep;
-                sleepInHours = getSleepInHours(sleepInMinutes);
-                consumedCalories = data.diet.consumedCalories;
-                burnedCalories = data.diet.burnedCalories;
-                gridData = data.activity.gridData;
-                chartDietData = data.activity.charDietData;
-                chartData = data.activity.chartWorkoutData;
-                activityChartMonthData = data.activity.activityChartMonthData;
-                activityChartWeekData = data.activity.activityChartWeekData;
+                // activityChartMonthData = data.activity.activityChartMonthData;
+                // activityChartWeekData = data.activity.activityChartWeekData;
                 currentBreakFastMenu = data.diet.breakFastMenu;
                 currentBreakFastCalories = data.diet.breakFastCalories;
                 currentBreakFastMenuText = data.diet.breakFastText;
@@ -470,7 +416,6 @@ function Activities() {
                 currentLunchCalories = data.diet.lunchCalories;
                 currentLunchMenuText = data.diet.lunchText;
                 isLunchMenuAdded = data.diet.isLunchAdded;
-                weightChartData = data.fasting.chartWeightData;
                 currentTotalProteins = data.diet.proteins;
                 currentTotalFat = data.diet.fat;
                 currentTotalCarbs = data.diet.carbs;
@@ -479,39 +424,34 @@ function Activities() {
                 currentTotalIron = data.diet.iron;
             } else {
                 updateMenu();
-                let morningWalk = Math.round(Math.random() * (3000 - 1000) + 1000);
-                let eveningWalk = Math.round(Math.random() * (3000 - 1000) + 1000);
                 let breakfastWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
                 let lunchWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
                 let eveningWaterTaken = Math.round(Math.random() * (5 - 2) + 2);
-                steps = morningWalk + eveningWalk;
-                setName(Math.round(Math.random() * (100 - 70) + 70));
-                sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
-                sleepInHours = getSleepInHours(sleepInMinutes);
+                let morningWalk = Math.round(Math.random() * (3000 - 1000) + 1000);
+                let eveningWalk =  Math.round(Math.random() * (3000 - 1000) + 1000);
+                let sleepInMinutes = Math.round(Math.random() * (480 - 300) + 300);
                 consumedWaterCount = breakfastWaterTaken + lunchWaterTaken + eveningWaterTaken;
                 consumedWaterAmount = consumedWaterCount * 150;
-                gridData = getData();
-                chartDietData = getChartData('Diet');
-                chartData = getChartData('Workout');
-                weightChartData = getWeightChartData();
                 data = {
                     date: currentDate.toLocaleDateString(),
                     activity: {
-                        steps: steps,
-                        heartRate: heartRate,
-                        calories: consumedCalories,
-                        sleep: sleepInMinutes,
-                        gridData: JSON.parse(JSON.stringify(gridData)),
-                        charDietData: JSON.parse(JSON.stringify(chartDietData)),
-                        chartWorkoutData: JSON.parse(JSON.stringify(chartData)),
-                        activityChartMonthData: JSON.parse(JSON.stringify(activityChartMonthData)),
-                        activityChartWeekData: JSON.parse(JSON.stringify(activityChartWeekData)),
+                        steps: morningWalk + eveningWalk,
+                        heartRate: Math.round(Math.random () * (100 -70) + 70),
+                        calories: state.consumedCalories,
+                        sleepInMinutes : Math.round(Math.random() * (480 - 300) + 300),
+                        sleepInHours : getSleepInHours(sleepInMinutes),
+                        gridData: getData(),
+                        chartDietData: getChartData('Diet'),
+                        chartData: getChartData('Workout'),
                         morningWalk: morningWalk,
                         eveningWalk: eveningWalk
+                        // activityChartMonthData: JSON.parse(JSON.stringify(activityChartMonthData)),
+                        // activityChartWeekData: JSON.parse(JSON.stringify(activityChartWeekData)),
                     },
                     diet: {
                         breakFastMenu: JSON.parse(JSON.stringify(currentBreakFastMenu)),
-                        breakFastCalories: currentBreakFastCalories,
+                        breakFastCalories: 0,
+                        expectedCalories: 3000,
                         breakFastText: currentBreakFastMenuText,
                         isBreakFastMenuAdded: isBreakFastMenuAdded,
                         snack1Menu: JSON.parse(JSON.stringify(currentSnack1Menu)),
@@ -522,9 +462,10 @@ function Activities() {
                         lunchCalories: currentLunchCalories,
                         lunchText: currentLunchMenuText,
                         isLunchAdded: isLunchMenuAdded,
-                        consumedCalories: consumedCalories,
+                        consumedCalories:  Math.round(Math.random() * (3000 - 1000) + 1000),
                         burnedCalories: burnedCalories,
-                        breakfastWaterTaken: breakfastWaterTaken,
+                        breakfastWaterTaken: Math.round(Math.random() * (5 - 2) + 2),
+                        expectedWaterAmount:  2400,
                         lunchWaterTaken: lunchWaterTaken,
                         eveningWaterTaken: eveningWaterTaken,
                         proteins: currentTotalProteins,
@@ -535,58 +476,70 @@ function Activities() {
                         iron: currentTotalIron,
                     },
                     fasting: {
-                        chartWeightData: weightChartData,
                         consumedWaterCount: consumedWaterCount
                     }
                 };
                 masterData.push(data);
             }
-            updateWaterGauge();
-            if (circulargauge) {
-                endFasting();
-            }
             if (gridInstance) {
-                gridInstance.dataSource = gridData;
+                gridInstance.dataSource = data.activity.gridData;
             }
             if (chartInstance) {
-                chartInstance.series[0].dataSource = chartInstance.series[2].dataSource = chartDietData;
-                chartInstance.series[1].dataSource = chartInstance.series[3].dataSource = chartData;
+                chartInstance.series[0].dataSource = chartInstance.series[2].dataSource = data.activity.chartDietData;
+                chartInstance.series[1].dataSource = chartInstance.series[3].dataSource = data.activity.chartData;
                 chartInstance.refresh();
             }
-            if (weightChartInstance) {
-                weightChartInstance.series[0].dataSource = weightChartData;
-            }
-            todayActivities = [
+            let updateActivities = [
                 { name: 'Morning Walk', activity: 'Morning Walk', duration: '30m', distance: (data.activity.morningWalk / 1312).toFixed(2).replace(/[.,]00$/, "") + 'km', percentage: ((data.activity.morningWalk / 6000) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:00 AM' },
-                { name: 'Breakfast Water', activity: 'Water Taken', count: data.diet.breakfastWaterTaken, amount: data.diet.breakfastWaterTaken + ' Glasses', percentage: (((data.diet.breakfastWaterTaken * 150) / expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:40 AM' },
-                { name: 'Breakfast', activity: 'Breakfast', amount: currentBreakFastMenuText, percentage: ((currentBreakFastCalories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '9:00 AM' },
-                { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '11:00 AM' },
-                { name: 'Lunch Water', activity: 'Water Taken', count: data.diet.lunchWaterTaken, amount: data.diet.lunchWaterTaken + ' Glasses', percentage: (((data.diet.lunchWaterTaken * 150) / expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '12:00 PM' },
-                { name: 'Lunch', activity: 'Lunch', amount: currentLunchMenuText, percentage: ((currentLunchCalories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '1:00 PM' },
-                { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '3:00 PM' },
-                { name: 'Evening Water', activity: 'Water Taken', count: data.diet.eveningWaterTaken, amount: data.diet.eveningWaterTaken + ' Glasses', percentage: (((data.diet.eveningWaterTaken * 150) / expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '4:00 PM' },
+                { name: 'Breakfast Water', activity: 'Water Taken', count: data.diet.breakfastWaterTaken, amount: data.diet.breakfastWaterTaken + ' Glasses', percentage: (((data.diet.breakfastWaterTaken * 150) / data.diet.expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '7:40 AM' },
+                { name: 'Breakfast', activity: 'Breakfast', amount: currentBreakFastMenuText, percentage: ((currentBreakFastCalories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '9:00 AM' },
+                { name: 'Snack1', activity: 'Snack', amount: currentSnack1MenuText, percentage: ((currentSnack1Calories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '11:00 AM' },
+                { name: 'Lunch Water', activity: 'Water Taken', count: data.diet.lunchWaterTaken, amount: data.diet.lunchWaterTaken + ' Glasses', percentage: (((data.diet.lunchWaterTaken * 150) / data.diet.expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '12:00 PM' },
+                { name: 'Lunch', activity: 'Lunch', amount: currentLunchMenuText, percentage: ((currentLunchCalories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '1:00 PM' },
+                { name: 'Snack2', activity: 'Snack', amount: currentSnack2MenuText, percentage: ((currentSnack2Calories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '3:00 PM' },
+                { name: 'Evening Water', activity: 'Water Taken', count: data.diet.eveningWaterTaken, amount: data.diet.eveningWaterTaken + ' Glasses', percentage: (((data.diet.eveningWaterTaken * 150) / data.diet.expectedWaterAmount) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '4:00 PM' },
                 { name: 'Evening Walk', activity: 'Evening Walk', duration: '30m', distance: (data.activity.eveningWalk / 1312).toFixed(2).replace(/[.,]00$/, "") + 'km', percentage: ((data.activity.eveningWalk / 6000) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '5:30 PM' },
-                { name: 'Dinner', activity: 'Dinner', amount: currentDinnerMenuText, percentage: ((currentDinnerCalories / expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '8:00 PM' }
+                { name: 'Dinner', activity: 'Dinner', amount: currentDinnerMenuText, percentage: ((currentDinnerCalories / data.diet.expectedCalories) * 100).toFixed(2).replace(/[.,]00$/, "") + '%', time: '8:00 PM' }
             ];
+            setState( () => {
+                return {
+                    heartRate : data.activity.heartRate,
+                    steps : data.activity.steps,
+                    sleepInMinutes : data.activity.sleep,
+                    sleepInHours : getSleepInHours(data.activity.sleepInMinutes),
+                    gridData: data.activity.gridData,
+                    chartDietData: data.activity.charDietData,
+                    chartData: data.activity.chartWorkoutData,
+                    consumedCalories: data.diet.consumedCalories,
+                    morningWalk: data.activity.morningWalk,
+                    eveningWalk: data.activity.eveningWalk,
+                    breakfastWaterTaken:data.diet.breakfastWaterTaken,
+                    expectedWaterAmount : data.diet.expectedWaterAmount,
+                    currentBreakFastCalories: data.diet.breakFastCalories,
+                    todayActivities : updateActivities,
+                    datePickerDate : currentDate,
+                    expectedCalories:data.diet.expectedCalories
+                }
+            })
         } else {
-            consumedCalories = 0;
+            state.consumedCalories = 0;
             isBreakFastMenuAdded = false;
             isSnack1MenuAdded = false;
             isLunchMenuAdded = false;
             isSnack2MenuAdded = false;
             isDinnerMenuAdded = false;
-            todayActivities = getInitialData();
-            pieData = getPieChartData();
-            countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
-            countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
-            diff = 16;
-            minimumDate = new Date(new Date().setHours(0, 0, 0));
-            maximumDate = new Date(new Date().setHours(minimumDate.getHours() + 24, 0, 0));
-            //clearInterval(x);
-            //x = setInterval(intervalFn.bind(this), 1000);
-            updateWaterGauge();
+            getInitialData();
+            // pieData = getPieChartData();
+            // countStartDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(18, 0, 0, 0)) : new Date(new Date(new Date().setDate(new Date().getDate() - 1)).setHours(18, 0, 0, 0));
+            // countDownDate = new Date().getHours() >= 17 ? new Date(new Date().setHours(countStartDate.getHours() + 16, 0, 0, 0)) : new Date(new Date(new Date().setDate(countStartDate.getDate())).setHours(countStartDate.getHours() + 16, 0, 0, 0));
+            // diff = 16;
+            // minimumDate = new Date(new Date().setHours(0, 0, 0));
+            // maximumDate = new Date(new Date().setHours(minimumDate.getHours() + 24, 0, 0));
+            // clearInterval(x);
+            // x = setInterval(intervalFn.bind(this), 1000);
+            // updateWaterGauge();
         }
-        //disableElements();
+        // disableElements();
 
     }
 
@@ -612,7 +565,6 @@ function Activities() {
         currentDinnerMenu = lunchMenu.sort(() => Math.random() - Math.random()).slice(0, 3);
         isDinnerMenuAdded = true;
         updateConsumedCalories();
-        pieData = getPieChartData();
     }
     
 
@@ -649,25 +601,29 @@ function Activities() {
         }
         return sampleData;
     }
-    function getWeightChartData() {
-        let count = 12;
-        let sampleData = [];
-        for (let i = count - 1; i >= 0; i--) {
-            let date = (currentDate) ? new Date(currentDate) : new Date();
-            let data = {
-                x: new Date(date.setMonth(date.getMonth() - i)),
-                y: Math.round(70 + (i * (Math.random() * (3.5 - 2) + 2)))
-            };
-            sampleData.push(data);
-        }
-        return sampleData;
-    }
+    // function getWeightChartData() {
+    //     let count = 12;
+    //     let sampleData = [];
+    //     for (let i = count - 1; i >= 0; i--) {
+    //         let date = (currentDate) ? new Date(currentDate) : new Date();
+    //         let data = {
+    //             x: new Date(date.setMonth(date.getMonth() - i)),
+    //             y: Math.round(70 + (i * (Math.random() * (3.5 - 2) + 2)))
+    //         };
+    //         sampleData.push(data);
+    //     }
+    //     return sampleData;
+    // }
     function onDropDownChange() {
-        chartDietData = getChartData('Diet');
-        chartData = getChartData('Workout');
-        chartInstance.series[0].dataSource = chartInstance.series[2].dataSource = chartDietData;
-        chartInstance.series[1].dataSource = chartInstance.series[3].dataSource = chartData;
-        chartInstance.refresh();
+        setState( prevState => {
+                return {
+                    ...prevState,
+                    chartDietData: getChartData('Diet'),
+                    chartData: getChartData('Workout')
+                }
+            })
+        // chartDietData = getChartData('Diet');
+        // chartData = getChartData('Workout');
     }
     function legendClick(args) {
 
@@ -677,13 +633,17 @@ function Activities() {
     }
 
     function onProfileDateChange(args){
-        currentDate = args.value;
-        updateComponents();
+        if(initialUpdate){
+            initialUpdate = false;
+            currentDate = args.value;
+            updateComponents();
+            initialUpdate = true;
+        }
     }
 
-    const image= {
-        avatarUrl: './assets/Profile/Heart-1.svg'
-    };
+    // const image= {
+    //     avatarUrl: './assets/Profile/Heart-1.svg'
+    // };
    
     return (
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
@@ -694,7 +654,7 @@ function Activities() {
                             <div className="e-panel-header col-md-12 col-sm-12 col-xs-12 col-lg-12">
                                 <div className="col-md-3 col-sm-6 col-xs-6 col-lg-3 e-my-activities-header">My Activities</div>
                                 <div className="col-md-3 col-sm-6 col-xs-6 col-lg-3 e-my-activities-date">
-                                    <DatePickerComponent id="datepicker" value={currentDate} max={maxDate} width={datePickerWidth} change={onDateChange} />
+                                    <DatePickerComponent id="datepicker" value = {state.datePickerDate} max={maxDate} width={datePickerWidth} change={onDateChange} />
                                 </div>
                             </div>
                             <div className="e-panel-content e-activity-card-container">
@@ -708,7 +668,7 @@ function Activities() {
                                         </div>
                                     </div>
                                     <div className="e-card-content">
-                                        <div className="e-bpm-value">{heartRate}<span>bpm</span></div>
+                                        <div className="e-bpm-value">{state.heartRate}<span> bpm</span></div>
                                         <div className="e-progress-annotation"></div>
                                     </div>
                                 </div>
@@ -720,7 +680,7 @@ function Activities() {
                                         </div>
                                     </div>
                                     <div className="e-card-content">
-                                        <div className="e-activity-actual">{steps}</div>
+                                        <div className="e-activity-actual">{state.steps}</div>
                                         <div className="e-activity-goal">6000</div>
                                     </div>
                                 </div>
@@ -732,10 +692,10 @@ function Activities() {
                                         </div>
                                     </div>
                                     <div className="e-card-content">
-                                        <div className="e-activity-actual">{consumedCalories}
-                                            <span className="e-activity-actual-unit">kcal</span>
+                                        <div className="e-activity-actual">{state.consumedCalories}
+                                            <span className="e-activity-actual-unit"> kcal</span>
                                         </div>
-                                        <div className="e-activity-goal">{expectedCalories} kcal</div>
+                                        <div className="e-activity-goal">{state.expectedCalories} kcal</div>
                                     </div>
                                 </div>
                                 <div tabIndex={0} className="e-card e-sleep-card">
@@ -746,7 +706,7 @@ function Activities() {
                                         </div>
                                     </div>
                                     <div className="e-card-content">
-                                        <div className="e-activity-actual">{sleepInHours}</div>
+                                        <div className="e-activity-actual">{state.sleepInHours}</div>
                                         <div className="e-activity-goal">8h</div>
                                     </div>
                                 </div>
@@ -781,7 +741,7 @@ function Activities() {
                                     <Inject services={[SplineSeries, DateTime, Legend, Tooltip, Crosshair, SplineAreaSeries]} />
                                     <SeriesCollectionDirective>
                                         <SeriesDirective
-                                            dataSource={chartDietData}
+                                            dataSource={state.chartDietData}
                                             legendShape='Circle'
                                             type='Spline'
                                             fill="#2084FE"
@@ -792,7 +752,7 @@ function Activities() {
                                             width={4} >
                                         </SeriesDirective>
                                         <SeriesDirective
-                                            dataSource={chartData}
+                                            dataSource={state.chartData}
                                             legendShape='Circle'
                                             type='Spline'
                                             fill="#F547A8"
@@ -803,14 +763,14 @@ function Activities() {
                                             width={4} >
                                         </SeriesDirective>
                                         <SeriesDirective
-                                            dataSource={chartDietData}
+                                            dataSource={state.chartDietData}
                                             type='SplineArea'
                                             fill='url(#gradient-diet-chart)'
                                             xName="x"
                                             yName="y" >
                                         </SeriesDirective>
                                         <SeriesDirective
-                                            dataSource={chartData}
+                                            dataSource={state.chartData}
                                             type='SplineArea'
                                             fill='url(#gradient-activity-chart)'
                                             xName="x"
@@ -829,7 +789,7 @@ function Activities() {
                                 <div>Recent Workout</div>
                             </div>
                             <div>
-                                <GridComponent dataSource={gridData} gridLines='None' rowHeight={60} queryCellInfo={customiseCell} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
+                                <GridComponent dataSource={state.gridData} gridLines='None' rowHeight={60} queryCellInfo={customiseCell} width={'100%'} height={'100%'} ref={(gridIns) => { gridInstance = gridIns }}>
                                     <ColumnsDirective>
                                         <ColumnDirective field='Workout' headerText='Workout' textAlign='Left' width="200" />
                                         <ColumnDirective field='Distance' headerText='Distance (kms)' textAlign='Left' width="200" format="###.# km" />
@@ -845,7 +805,7 @@ function Activities() {
             </div>
             <div className="col-md-3">
                 <React.Suspense fallback="Loading">
-                    <Profile currentDate={currentDate} activities = {todayActivities} profileStats = {profileStats} onDateChange={onDateChange}></Profile>
+                    <Profile currentDate={state.datePickerDate} maxDate={maxDate} activities = {state.todayActivities} profileStats = {profileStats} onProfileDateChange={onProfileDateChange}></Profile>
                 </React.Suspense>
             </div>
         </div>

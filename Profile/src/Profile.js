@@ -7,7 +7,7 @@ function Profile(props) {
     let currentDate = props.currentDate;
     let activities = props.activities;
     let profileStats = props.profileStats;
-    let maxDate = new Date();
+    let maxDate = props.maxDate;
 
     function getFullDetails(activity) {
         let distance = activity.distance;
@@ -87,7 +87,7 @@ function Profile(props) {
                     <div>
                         <div className="e-journal" style={{ float: "left" }}>Journals</div>
                         <div className="e-journal-date" style={{ float: "right" }}>
-                            <DatePickerComponent value={currentDate} maxDate={maxDate} width="100%" change={props.onDateChange}></DatePickerComponent>
+                            <DatePickerComponent value={currentDate} max={maxDate} width="100%" change={props.onProfileDateChange}></DatePickerComponent>
                         </div>
                     </div>
                     <div className="profile-diet-card-container">{activities.map(getFullDetails)}</div>
