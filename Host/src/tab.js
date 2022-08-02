@@ -13,6 +13,11 @@ const Profile = React.lazy(() =>
 
 function Tab() {
     const headerPlacement = Browser.isDevice ? 'Bottom' : 'Top';
+    let innerWidth = window.innerWidth;
+    let isSmallDevice = false;
+    if (innerWidth <= 820) {
+        isSmallDevice = true;
+    }
     const headerText = [{ 'text': 'ACTIVITIES', iconCss: 'icon-Activities', iconPosition: 'top' }, { 'text': 'DIET', iconCss: 'icon-Diet', iconPosition: 'top' }, { 'text': 'FASTING', iconCss: 'icon-Fasting', iconPosition: 'top' }, { 'text': 'PROFILE', iconCss: 'icon-Profile', iconPosition: 'top' }];
     function created() {
         let iconDiv = document.createElement('div');
@@ -33,6 +38,11 @@ function Tab() {
     }
     function tabSelected(e) {
     }
+    function profileTab() {
+        return(
+            <Profile></Profile>
+        )
+    }
     function contentActivities() {
         return (
             <Activities></Activities>
@@ -44,6 +54,7 @@ function Tab() {
                 <TabItemDirective header={headerText[0]} content={contentActivities}></TabItemDirective>
                 <TabItemDirective header={headerText[1]} ></TabItemDirective>
                 <TabItemDirective header={headerText[2]} ></TabItemDirective>
+                {isSmallDevice && <TabItemDirective header={headerText[3]} content={profileTab}></TabItemDirective> }
             </TabItemsDirective>
         </TabComponent>
     );

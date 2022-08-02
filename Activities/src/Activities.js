@@ -4,7 +4,7 @@ import { Browser } from '@syncfusion/ej2-base';
 import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
 import { ChartComponent, SeriesCollectionDirective, SeriesDirective, Inject, Crosshair, SplineSeries, DateTime, Legend, Tooltip, SplineAreaSeries } from '@syncfusion/ej2-react-charts';
-import { ColumnDirective, ColumnsDirective, GridComponent } from '@syncfusion/ej2-react-grids';
+import { ColumnDirective, ColumnsDirective, GridComponent, onResize } from '@syncfusion/ej2-react-grids';
 
 const Profile = React.lazy(() =>
     import('Profile/Profile')
@@ -624,19 +624,7 @@ function Activities() {
         }
         return sampleData;
     }
-    // function getWeightChartData() {
-    //     let count = 12;
-    //     let sampleData = [];
-    //     for (let i = count - 1; i >= 0; i--) {
-    //         let date = (currentDate) ? new Date(currentDate) : new Date();
-    //         let data = {
-    //             x: new Date(date.setMonth(date.getMonth() - i)),
-    //             y: Math.round(70 + (i * (Math.random() * (3.5 - 2) + 2)))
-    //         };
-    //         sampleData.push(data);
-    //     }
-    //     return sampleData;
-    // }
+    
     function onDropDownChange() {
         setState( prevState => {
                 return {
@@ -645,8 +633,6 @@ function Activities() {
                     chartData: getChartData('Workout')
                 }
             })
-        // chartDietData = getChartData('Diet');
-        // chartData = getChartData('Workout');
     }
     function legendClick(args) {
 
@@ -665,6 +651,14 @@ function Activities() {
     }
 
     return (
+        <div>
+        {isSmallDevice && 
+        <div  className="e-tab-header-mobile-icon-container">
+        <div className="e-tab-header-icon-div">
+          <span className="e-tab-header-icon icon-Logo"></span>
+        </div>
+        <div className="e-tab-title">GO<span>FIT</span></div>
+        </div>}
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
             <div className="col-md-9 e-dashboard-content">
                 <div className="col-md-12 col-sm-12">
@@ -822,11 +816,14 @@ function Activities() {
                     </div>
                 </div>
             </div>
-            <div className="col-md-3">
-                <React.Suspense fallback="Loading">
-                    <Profile currentDate={state.datePickerDate} maxDate={maxDate} activities = {state.todayActivities} profileStats = {profileStats} onProfileDateChange={onProfileDateChange}></Profile>
-                </React.Suspense>
-            </div>
+            {!isSmallDevice &&
+                  <div className="col-md-3">
+                  <React.Suspense fallback="Loading">
+                      <Profile currentDate={state.datePickerDate} maxDate={maxDate} activities = {state.todayActivities} profileStats = {profileStats} onProfileDateChange={onProfileDateChange}></Profile>
+                  </React.Suspense>
+              </div>
+            }
+        </div>
         </div>
     )
 

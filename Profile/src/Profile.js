@@ -4,7 +4,6 @@ import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 
 
 function Profile(props) {
-    
     let currentDate = props.currentDate;
     let activities = props.activities;
     let profileStats = props.profileStats;
