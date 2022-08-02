@@ -352,6 +352,10 @@ function Activities() {
                     lunchCalories: currentLunchCalories,
                     lunchText: currentLunchMenuText,
                     isLunchAdded: isLunchMenuAdded,
+                    dinnerMenu: JSON.parse(JSON.stringify(currentDinnerMenu)),
+                    dinnerCalories: currentDinnerCalories,
+                    dinnerText: currentDinnerMenuText,
+                    isDinnerMenuAdded : isDinnerMenuAdded,
                     snack2Menu: JSON.parse(JSON.stringify(currentSnack2Menu)),
                     snack2Calories: currentSnack2Calories,
                     snack2Text: currentSnack2MenuText,
@@ -388,6 +392,10 @@ function Activities() {
             currentLunchCalories = data.diet.lunchCalories;
             currentLunchMenuText = data.diet.lunchText;
             isLunchMenuAdded = data.diet.isLunchAdded;
+            currentDinnerMenu = data.diet.dinnerMenu;
+            currentDinnerCalories = data.diet.dinnerCalories;
+            currentDinnerMenuText = data.diet.dinnerText;
+            isDinnerMenuAdded = data.diet.isDinnerMenuAdded;
             currentSnack2Menu = data.diet.snack2Menu;
             currentSnack2Calories = data.diet.snack2Calories;
             currentSnack2MenuText = data.diet.snack2Text;
@@ -467,6 +475,10 @@ function Activities() {
                 currentLunchCalories = data.diet.lunchCalories;
                 currentLunchMenuText = data.diet.lunchText;
                 isLunchMenuAdded = data.diet.isLunchAdded;
+                currentDinnerMenu =data.diet.dinnerMenu;
+                currentDinnerCalories = data.diet.dinnerCalories;
+                currentDinnerMenuText = data.diet.dinnerText;
+                isDinnerMenuAdded = data.diet.isDinnerMenuAdded;
                 currentTotalProteins = data.diet.proteins;
                 currentTotalFat = data.diet.fat;
                 currentTotalCarbs = data.diet.carbs;
@@ -517,6 +529,10 @@ function Activities() {
                         lunchCalories: currentLunchCalories,
                         lunchText: currentLunchMenuText,
                         isLunchAdded: isLunchMenuAdded,
+                        dinnerMenu: JSON.parse(JSON.stringify(currentDinnerMenu)),
+                        dinnerCalories : currentDinnerCalories,
+                        dinnerText : currentDinnerMenuText,
+                        isDinnerAdded: isDinnerMenuAdded,
                         consumedCalories:  Math.round(Math.random() * (3000 - 1000) + 1000),
                         burnedCalories: burnedCalories,
                         breakfastWaterTaken: Math.round(Math.random() * (5 - 2) + 2),
