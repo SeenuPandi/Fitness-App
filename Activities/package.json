@@ -36,6 +36,7 @@
     "@syncfusion/ej2-react-grids": "^20.2.39",
     "@syncfusion/ej2-react-navigations": "^20.2.39",
     "@syncfusion/ej2-react-progressbar": "^20.2.38",
+    "file-loader": "^6.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   }

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import HeartRate from './assets/Profile/Heart-1.svg';
 import { Browser } from '@syncfusion/ej2-base';
 import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 import { DropDownListComponent } from '@syncfusion/ej2-react-dropdowns';
@@ -160,59 +161,12 @@ function Activities() {
         getInitialData();
     },[]);
     
-    innerWidth = window.innerWidth;
+    let innerWidth = window.innerWidth;
+    let isSmallDevice = false;
     if (innerWidth <= 820) {
         isSmallDevice = true;
     }
     
-    // let datePickerWidth = '100%';
-    // let chartArea = {
-    //     border: {
-    //         width: 0,
-    //     },
-    // };
-    // let primaryXAxis = {
-    //     valueType: 'DateTime',
-    //     labelFormat: 'MMM dd',
-    //     intervalType: 'Days',
-    //     interval: 1,
-    //     edgeLabelPlacement: 'Shift',
-    //     labelIntersectAction: 'Hide',
-    //     labelStyle: {
-    //         size: '16px',
-    //         color: '#56648A',
-    //         fontFamily: 'Inter',
-    //         fontWeight: '500',
-    //     },
-    //     majorGridLines: {
-    //         width: 0,
-    //     },
-    // };
-    // let primaryYAxis = {
-    //     labelFormat: '{value}%',
-    //     maximum: 100,
-    //     interval: 50,
-    //     labelStyle: {
-    //         size: '16px',
-    //         color: '#56648A',
-    //         fontFamily: 'Inter',
-    //         fontWeight: '500',
-    //     },
-    //     majorGridLines: {
-    //         dashArray: '10,5',
-    //     },
-    // };
-    // let activityChartHeight = '70%';
-    // let legendSettings = { position: 'Top' };
-    // let tooltip = {
-    //     enable: true,
-    //     shared: true,
-    //     format: '${series.name} : ${point.y}',
-    //     textStyle: { fontFamily: 'Inter' },
-    // };
-    // let crosshair = { enable: true, lineType: 'Vertical', dashArray: "10,5", line: { color: '#EE4769' } };
-    // let marker = { visible: true, height: 10, width: 10 };
-    // let dropDownData = ['Weekly', 'Monthly'];
     function getChartData(action) {
         let count = (dropDownInstance && dropDownInstance.value === 'Monthly') ? 30 : 7;
         let sampleData = [];
@@ -226,9 +180,7 @@ function Activities() {
             if (i == 0) {
                 todaysWorkoutPercent = data['y'];
             }
-
         }
-
         return sampleData;
     }
 
@@ -712,10 +664,6 @@ function Activities() {
         }
     }
 
-    // const image= {
-    //     avatarUrl: './assets/Profile/Heart-1.svg'
-    // };
-   
     return (
         <div className="e-dashboardlayout-container  e-activity-dashboardlayout-container">
             <div className="col-md-9 e-dashboard-content">
@@ -740,7 +688,7 @@ function Activities() {
                                     </div>
                                     <div className="e-card-content">
                                         <div className="e-bpm-value">{state.heartRate}<span> bpm</span></div>
-                                        <div className="e-progress-annotation"></div>
+                                        <div className="e-progress-annotation"> <img src={HeartRate} alt="HeartRate" /></div>
                                     </div>
                                 </div>
                                 <div tabIndex={0} className="e-card e-steps-card">

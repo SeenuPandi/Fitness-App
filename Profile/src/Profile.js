@@ -1,4 +1,5 @@
 import React from "react";
+import ProfilePicture from './assets/Profile/02.png';
 import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 
 
@@ -38,7 +39,7 @@ function Profile(props) {
                     <div className="e-card e-custom-card">
                         <div className="e-card-header">
                             <div className="e-avatar e-avatar-circle">
-                                <img src="http://placekitten.com/g/64/64" alt="JW" />
+                                <img src={ProfilePicture} alt="JW" />
                             </div>
                             <div className="e-profile-editor">
                                 <div className="e-profile-inner-editor">
