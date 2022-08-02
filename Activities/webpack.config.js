@@ -43,7 +43,9 @@ module.exports = {
     new ModuleFederationPlugin({
       name: "Activities",
       filename: "remoteEntry.js",
-      remotes: {},
+      remotes: {
+        Profile:'Profile@http://localhost:8082/remoteEntry.js'
+      },
       exposes: {
         './Activities':'./src/Activities'
       },

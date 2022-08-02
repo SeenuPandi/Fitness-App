@@ -89,34 +89,6 @@ function Activities() {
     var currentTotalIron = 0;
     var currentTotalSodium = 0;
     var consumedCalories = 0;
-    var [state, setState] = useState({
-        heartRate: Math.round(Math.random() * (100 - 70) + 70),
-        steps: Math.round(Math.random() * (3000 - 1000) + 1000),
-        consumedCalories:Math.round(Math.random() * (3000 - 1000) + 1000),
-        sleepInMinutes: sleepInMinutes,
-        sleepInHours: getSleepInHours(sleepInMinutes),
-        gridData: getData(),
-        chartDietData: getChartData('Diet'),
-        chartData: getChartData('Workout'),
-        morningWalk: Math.round(Math.random() * (3000 - 1000) + 1000),
-        eveningWalk : Math.round(Math.random() * (3000 - 1000) + 1000),
-        breakfastWaterTaken: Math.round(Math.random() * (5 - 2) + 2),
-        expectedWaterAmount: 2400,
-        expectedCalories : 3000,
-        todayActivities : [],
-        datePickerDate: currentDate
-    });
-    var isToday = true;
-    useEffect(()=>{
-        updateConsumedCalories();
-        getInitialData();
-    },[]);
-    
-    innerWidth = window.innerWidth;
-    if (innerWidth <= 820) {
-        isSmallDevice = true;
-    }
-    
     let datePickerWidth = '100%';
     let chartArea = {
         border: {
@@ -165,6 +137,82 @@ function Activities() {
     let crosshair = { enable: true, lineType: 'Vertical', dashArray: "10,5", line: { color: '#EE4769' } };
     let marker = { visible: true, height: 10, width: 10 };
     let dropDownData = ['Weekly', 'Monthly'];
+    var [state, setState] = useState({
+        heartRate: Math.round(Math.random() * (100 - 70) + 70),
+        steps: Math.round(Math.random() * (3000 - 1000) + 1000),
+        consumedCalories:Math.round(Math.random() * (3000 - 1000) + 1000),
+        sleepInMinutes: sleepInMinutes,
+        sleepInHours: getSleepInHours(sleepInMinutes),
+        gridData: getData(),
+        chartDietData: getChartData('Diet'),
+        chartData: getChartData('Workout'),
+        morningWalk: Math.round(Math.random() * (3000 - 1000) + 1000),
+        eveningWalk : Math.round(Math.random() * (3000 - 1000) + 1000),
+        breakfastWaterTaken: Math.round(Math.random() * (5 - 2) + 2),
+        expectedWaterAmount: 2400,
+        expectedCalories : 3000,
+        todayActivities : [],
+        datePickerDate: currentDate
+    });
+    var isToday = true;
+    useEffect(()=>{
+        updateConsumedCalories();
+        getInitialData();
+    },[]);
+    
+    innerWidth = window.innerWidth;
+    if (innerWidth <= 820) {
+        isSmallDevice = true;
+    }
+    
+    // let datePickerWidth = '100%';
+    // let chartArea = {
+    //     border: {
+    //         width: 0,
+    //     },
+    // };
+    // let primaryXAxis = {
+    //     valueType: 'DateTime',
+    //     labelFormat: 'MMM dd',
+    //     intervalType: 'Days',
+    //     interval: 1,
+    //     edgeLabelPlacement: 'Shift',
+    //     labelIntersectAction: 'Hide',
+    //     labelStyle: {
+    //         size: '16px',
+    //         color: '#56648A',
+    //         fontFamily: 'Inter',
+    //         fontWeight: '500',
+    //     },
+    //     majorGridLines: {
+    //         width: 0,
+    //     },
+    // };
+    // let primaryYAxis = {
+    //     labelFormat: '{value}%',
+    //     maximum: 100,
+    //     interval: 50,
+    //     labelStyle: {
+    //         size: '16px',
+    //         color: '#56648A',
+    //         fontFamily: 'Inter',
+    //         fontWeight: '500',
+    //     },
+    //     majorGridLines: {
+    //         dashArray: '10,5',
+    //     },
+    // };
+    // let activityChartHeight = '70%';
+    // let legendSettings = { position: 'Top' };
+    // let tooltip = {
+    //     enable: true,
+    //     shared: true,
+    //     format: '${series.name} : ${point.y}',
+    //     textStyle: { fontFamily: 'Inter' },
+    // };
+    // let crosshair = { enable: true, lineType: 'Vertical', dashArray: "10,5", line: { color: '#EE4769' } };
+    // let marker = { visible: true, height: 10, width: 10 };
+    // let dropDownData = ['Weekly', 'Monthly'];
     function getChartData(action) {
         let count = (dropDownInstance && dropDownInstance.value === 'Monthly') ? 30 : 7;
         let sampleData = [];
@@ -266,15 +314,6 @@ function Activities() {
         }
     }
 
-
-    // function getPieChartData() {
-    //     return [{ x: 'PROTEINS', y: currentTotalProteins, fill: '#4DD291' }, { x: 'FAT', y: currentTotalFat, fill: '#FC892C' },
-    //     { x: 'CARBOHYDRATES', y: currentTotalCarbs, fill: '#FFC147' }, { x: 'CALCIUM', y: currentTotalCalcium, fill: '#E25641' },
-    //     { x: 'SODIUM', y: currentTotalSodium, fill: '#901C53' }, { x: 'IRON', y: currentTotalIron, fill: '#CB4967' }];
-    // }
-
-
-
     function getInitialData() {
         let data;
         if (masterData.length === 0) {
@@ -313,6 +352,10 @@ function Activities() {
                     lunchCalories: currentLunchCalories,
                     lunchText: currentLunchMenuText,
                     isLunchAdded: isLunchMenuAdded,
+                    snack2Menu: JSON.parse(JSON.stringify(currentSnack2Menu)),
+                    snack2Calories: currentSnack2Calories,
+                    snack2Text: currentSnack2MenuText,
+                    isSnack2MenuAdded: isSnack2MenuAdded,
                     consumedCalories: state.consumedCalories,
                     burnedCalories: burnedCalories,
                     breakfastWaterTaken: state.breakfastWaterTaken,
@@ -345,6 +388,10 @@ function Activities() {
             currentLunchCalories = data.diet.lunchCalories;
             currentLunchMenuText = data.diet.lunchText;
             isLunchMenuAdded = data.diet.isLunchAdded;
+            currentSnack2Menu = data.diet.snack2Menu;
+            currentSnack2Calories = data.diet.snack2Calories;
+            currentSnack2MenuText = data.diet.snack2Text;
+            isSnack2MenuAdded = data.diet.isSnack2MenuAdded;
             currentTotalProteins = data.diet.proteins;
             currentTotalFat = data.diet.fat;
             currentTotalCarbs = data.diet.carbs;
@@ -412,6 +459,10 @@ function Activities() {
                 currentSnack1Calories = data.diet.snack1Calories;
                 currentSnack1MenuText = data.diet.snack1Text;
                 isSnack1MenuAdded = data.diet.isSnack1Added;
+                currentSnack2Menu = data.diet.snack2Menu;
+                currentSnack2Calories = data.diet.snack2Calories;
+                currentSnack2MenuText = data.diet.snack1Text;
+                isSnack2MenuAdded = data.diet.isSnack2MenuAdded;
                 currentLunchMenu = data.diet.lunchMenu;
                 currentLunchCalories = data.diet.lunchCalories;
                 currentLunchMenuText = data.diet.lunchText;
@@ -450,7 +501,7 @@ function Activities() {
                     },
                     diet: {
                         breakFastMenu: JSON.parse(JSON.stringify(currentBreakFastMenu)),
-                        breakFastCalories: 0,
+                        breakFastCalories: currentBreakFastCalories,
                         expectedCalories: 3000,
                         breakFastText: currentBreakFastMenuText,
                         isBreakFastMenuAdded: isBreakFastMenuAdded,
@@ -458,6 +509,10 @@ function Activities() {
                         snack1Calories: currentSnack1Calories,
                         snack1Text: currentSnack1MenuText,
                         isSnack1Added: isSnack1MenuAdded,
+                        snack2Menu: JSON.parse(JSON.stringify(currentSnack2Menu)),
+                        snack2Calories : currentSnack2Calories,
+                        snack2Text: currentSnack2Calories,
+                        isSnack2Added: isSnack2MenuAdded,
                         lunchMenu: JSON.parse(JSON.stringify(currentLunchMenu)),
                         lunchCalories: currentLunchCalories,
                         lunchText: currentLunchMenuText,
